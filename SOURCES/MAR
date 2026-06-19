@@ -7,7 +7,7 @@ module mar(
     output reg [3:0] out
 );
 
-always @(posedge clk)
+always @(posedge clk or posedge rst)
 begin
     if(rst)
         out <= 4'b0000;

@@ -1,1 +1,57 @@
+RTL:
+module pc(
+    input clk,
+    input rst,
+    input inc,
+    output [3:0] out
+);
+
+reg [3:0] pc;
+
+always @(posedge clk or posedge rst)
+begin
+    if(rst)
+        pc <= 4'b0000;
+    else if(inc)
+        pc <= pc + 1'b1;
+end
+
+assign out = pc;
+
+endmodule
+
+TESTBENCH:
+module pc_tb;
+reg clk;
+reg rst;
+reg inc;
+wire [3:0] out;
+pc dut (
+    .clk(clk),
+    .rst(rst),
+    .inc(inc),
+    .out(out)
+);
+always #5 clk = ~clk;
+initial begin
+    clk = 0;
+    rst = 1;
+    inc = 0;
+   #10 rst = 0;
+    inc = 1;
+   #80;
+    inc = 0;
+   #20;
+    rst = 1;
+   #10;
+    rst = 0;
+    inc = 1;
+   #40;
+   $finish;
+end
+initial begin
+    $monitor("Time=%0t rst=%b inc=%b out=%d", $time, rst, inc, out);
+end
+
+endmodule
 

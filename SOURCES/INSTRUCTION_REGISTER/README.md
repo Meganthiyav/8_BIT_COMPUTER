@@ -1,12 +1,12 @@
-# 📘 Instruction Register (IR) – Verilog Design
+#  Instruction Register (IR) – Verilog Design
 
-## 📌 Description
+##  Description
 
 Instruction Register (IR) stores an 8-bit instruction fetched from memory and splits it into opcode and operand fields. It is controlled by a load signal (`ctrl_ir`) and used in basic CPU datapath design.
 
 ---
 
-## ⚙️ Specification
+##  Specification
 
 * Data width: 8-bit instruction
 * Clock: Positive edge triggered
@@ -19,7 +19,7 @@ Instruction Register (IR) stores an 8-bit instruction fetched from memory and sp
 
 ---
 
-## 💻 RTL Code
+##  RTL Code
 
 ```verilog
 module ir(
@@ -90,10 +90,10 @@ endmodule
 
 ---
 
-## 🧪 Simulation
+##  Simulation
 
 ---
 
-## 🧱 Block Diagram
+##  Block Diagram
 
 

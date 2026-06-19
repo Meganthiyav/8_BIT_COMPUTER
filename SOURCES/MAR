@@ -1,1 +1,61 @@
+RTL:
+module mar(
+    input clk,
+    input rst,
+    input load,
+    input [3:0] data_in,
+    output reg [3:0] out
+);
 
+always @(posedge clk)
+begin
+    if(rst)
+        out <= 4'b0000;
+    else if(load)
+        out <= data_in;
+end
+
+endmodule
+
+TB:
+module mar_tb;
+
+reg clk;
+reg rst;
+reg load;
+reg [3:0] data_in;
+wire [3:0] out;
+
+mar dut(
+    .clk(clk),
+    .rst(rst),
+    .load(load),
+    .data_in(data_in),
+    .out(out)
+);
+
+always #5 clk = ~clk;
+
+initial
+begin
+    $monitor("Time=%0t rst=%b load=%b data_in=%b out=%b",
+              $time, rst, load, data_in, out);
+
+    clk = 0;
+    rst = 1;
+    load = 0;
+    data_in = 0;
+
+    #10 rst = 0;
+
+    load = 1;
+    data_in = 4'b0101;
+    #10;
+
+    data_in = 4'b1010;
+    #10;
+
+    $finish;
+end
+
+endmodule

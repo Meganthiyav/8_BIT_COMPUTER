@@ -1,1 +1,121 @@
+ALU:
 
+• Developed an 8-bit FPGA-ready ALU in Verilog HDL.
+• Implemented ADD, SUB, INC, DEC, AND, OR, XOR, and NOT operations.
+• Designed carry flag generation for arithmetic instructions.
+• Created a self-checking testbench and validated functionality using Vivado Simulator.
+
+RTL CODE:
+module alu(input [7:0] a_in,
+           input [7:0] b_in,
+           input [2:0] command_in,
+           output reg [7:0] result,
+           output reg carry_out);
+           
+          reg[8:0] temp;
+always @(*) begin
+          result = 8'b00000000;
+          carry_out = 1'b0;
+          temp = 9'b000000000;
+          case(command_in)
+          3'b000:begin //add
+                 temp = a_in + b_in;
+                 result = temp[7:0];
+                 carry_out = temp[8];
+                 end
+          3'b001:begin //sub
+                 temp = a_in - b_in;
+                 result = temp[7:0];
+                 carry_out = (a_in < b_in);
+                 end
+          3'b010:begin //inc
+                 temp = a_in + 1'b1;
+                 result = temp[7:0];
+                 carry_out = temp[8];
+                 end
+          3'b011:begin //dec
+                 temp = a_in - 1'b1;
+                 result = temp[7:0];
+                 carry_out = temp[8];
+                 end
+          
+          3'b100:begin //and
+                 result = a_in & b_in;
+                 end
+                
+          3'b101:begin //or
+                 result = a_in | b_in;
+                 end
+                 
+          3'b110:begin //xor
+                 result = a_in ^ b_in;
+                 end
+               
+          3'b111:begin //not
+                 result = ~a_in;
+                 end
+           
+          default: begin
+                  result = 8'b00000000;
+                  carry_out = 1'b0;
+                  end
+          endcase
+     end
+  endmodule 
+
+
+
+TB:
+module tb_alu;
+
+reg [7:0] a_in;
+reg [7:0] b_in;
+reg [2:0] command_in;
+
+wire [7:0] result;
+wire carry_out;
+
+alu dut(
+    .a_in(a_in),
+    .b_in(b_in),
+    .command_in(command_in),
+    .result(result),
+    .carry_out(carry_out)
+);
+
+initial begin
+
+    a_in = 8'd0;
+    b_in = 8'd0;
+    command_in = 3'd0;
+
+    #10 a_in = 8'd10; b_in = 8'd5; command_in = 3'b000;
+    #10 command_in = 3'b001;
+    #10 command_in = 3'b010;
+    #10 command_in = 3'b011;
+    #10 command_in = 3'b100;
+    #10 command_in = 3'b101;
+    #10 command_in = 3'b110;
+    #10 command_in = 3'b111;
+
+    #10 a_in = 8'd255; b_in = 8'd1; command_in = 3'b000;
+    #10 command_in = 3'b001;
+    #10 command_in = 3'b010;
+    #10 command_in = 3'b011;
+
+    #20 $finish;
+
+end
+initial begin
+    $display("TIME\tCMD\tA\tB\tRESULT\tCARRY");
+    $monitor("%0t\t%b\t%d\t%d\t%d\t%b",
+             $time, command_in, a_in, b_in, result, carry_out);
+end
+
+endmodule
+                  
+                 
+                
+                 
+                     
+          

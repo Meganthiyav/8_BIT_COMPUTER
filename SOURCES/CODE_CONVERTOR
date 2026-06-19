@@ -26,6 +26,7 @@ begin
         default: seg = 7'b1111111;
     endcase
 end
+endmodule
 
 TB:
 module seven_seg_decoder_tb;

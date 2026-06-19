@@ -1,1 +1,58 @@
+RTL:
+module clock_divider(
+    input clk,
+    input rst,
+    output reg slow_clk
+);
 
+reg [23:0] count;
+
+always @(posedge clk)
+begin
+    if(rst)
+    begin
+        count <= 0;
+        slow_clk <= 0;
+    end
+    else if(count == 8333332)
+    begin
+        count <= 0;
+        slow_clk <= ~slow_clk;
+    end
+    else
+        count <= count + 1;
+end
+
+endmodule
+
+TB:
+module clock_divider_tb;
+
+reg clk;
+reg rst;
+wire slow_clk;
+
+clock_divider dut(
+    .clk(clk),
+    .rst(rst),
+    .slow_clk(slow_clk)
+);
+
+always #5 clk = ~clk;
+
+initial
+begin
+    $monitor("Time=%0t clk=%b slow_clk=%b",
+              $time, clk, slow_clk);
+
+    clk = 0;
+    rst = 1;
+
+    #10 rst = 0;
+
+    #200;
+
+    $finish;
+end
+
+endmodule
